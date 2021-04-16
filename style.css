@@ -14,3 +14,6 @@
 #evolucion-no{
     cursor: pointer;
 }
+body{
+    background-image: url(/img/patron1.jpg);
+}
