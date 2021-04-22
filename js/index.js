@@ -25,6 +25,7 @@ document.querySelector("#registrar-btn").addEventListener("click", ()=>{
     let legendario = document.querySelector("#legendario-si").checked;   
     //El tipo se obtiene igual que los input
     let tipo = document.querySelector("#tipo-select").value;
+    // para revisar la evolucion
     let evolucion = document.querySelector("#evolucion-si").checked;
     console.log("Hola Mundo!", nombre, descripcion, legendario, evolucion, tipo);
 });
