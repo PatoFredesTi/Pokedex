@@ -16,6 +16,29 @@ tinymce.init({
   });
 
 const pokemones = [];  
+//las funciones asignadas a los botones no debes ser asignadas con el () =>{}
+//cuando usas la palabra function haces referencia a this
+const eliminarPokemon = async function(){
+  //cuando hago this, me refiero al boton que presione
+  this.nro;
+  let res = await Swal.fire({
+    //para que funcione este codigo ${pokemones[this.nro].nombre} es necesario hacerlo con la comilla trasera `` que se hace
+    //con la tecla al lado del 1.
+    title: `Desea enviar al profesor Oak el pokemon ${pokemones[this.nro].nombre}?`,
+    showCancelButton:true,
+    confirmButtonText:"Si, enviar!"
+  });
+  if(res.isConfirmed){
+    //splice eliminara un pokemon, el 2do elemento es la cantidad de elementos a eliminar 
+    pokemones.splice(this.nro,1);
+    cargarTabla();
+    Swal.fire("Pokemon enviado al profesor Oak!");
+  }else{
+    Swal.fire("Operacion cancelada");
+  }
+};
+
+
 //Funcion tabla 
 const cargarTabla = () =>{
   //1. Obtener una referencia a la tabla
@@ -33,6 +56,10 @@ const cargarTabla = () =>{
     tdNro.innerText = (i+1);
     let tdNombre = document.createElement("td");
     tdNombre.innerText = p.nombre;
+    //Cambiar color si es que es legendario
+    if(p.legendario){
+      tdNombre.classList.add("text-warning");
+    }
     let tdTipo = document.createElement("td");
     //defino un elemento icono
     let icono = document.createElement("i");
@@ -93,13 +120,19 @@ const cargarTabla = () =>{
       icono.classList.add("fas","fa-bullseye","text-info","fa-3x");
     }
 
-  
-
-
     tdTipo.appendChild(icono);
     let tdDesc = document.createElement("td");
     tdDesc.innerHTML = p.descripcion;
     let tdAcciones = document.createElement("td");
+    tdAcciones.classList.add("text-center");
+    //Agregar un boton al td de acciones
+    let boton = document.createElement("button"); //crear elementos
+    boton.classList.add("btn","btn-danger"); //cambiar clases de los elementos
+    boton.innerText = "Enviar al profesor Oak"; //cambiar el texto de un elemento
+    boton.nro = i;
+    boton.addEventListener("click",eliminarPokemon);
+
+    tdAcciones.appendChild(boton); //agregar un elemento dentro de otro
     //5. Agregar las celdas al tr
     tr.appendChild(tdNro);
     tr.appendChild(tdNombre);
@@ -136,5 +169,17 @@ document.querySelector("#registrar-btn").addEventListener("click", ()=>{
     cargarTabla();
     //el primer argumento es el titulo, el segundo es lo que quiero mostrar, y la tercera es el icono con el que quiero mostrar la alerta
     Swal.fire("Exito!","Pokemon registrado", "success");
+
+  });
+
+  //Boton Limpiar
+
+  document.querySelector("#limpiar-btn").addEventListener("click", ()=>{
+    document.querySelector("#nombre-txt").value="";
+    //document.querySelector("#descripcion-txt").value =""; //el codigo asi no funcionara
+    tinymce.get("descripcion-txt").setContent("");
+    document.querySelector("#legendario-no").checked = true;
+    document.querySelector("#tipo-select").value = "planta";
+
 
   });
